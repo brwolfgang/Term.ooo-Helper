@@ -1,15 +1,12 @@
 package me.olobo.java.termoohelper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TermoHelper {
     public static void main(String[] args) throws Exception {
@@ -40,13 +37,14 @@ public class TermoHelper {
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            URI uriArquivoDicionario = getClass().getClassLoader().getResource(arquivoDicionario).toURI();
+            InputStream fileFromResourceAsStream = getFileFromResourceAsStream(arquivoDicionario);
 
-            Stream<String> lines = Files.lines(Path.of(uriArquivoDicionario), StandardCharsets.UTF_8);
-
-            lines.forEach(s -> stringBuilder.append(s).append("\n"));
-
-        } catch (IOException | URISyntaxException e) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileFromResourceAsStream));
+            
+            while (reader.ready()) {
+                stringBuilder.append(reader.readLine()).append("\n");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -55,5 +53,17 @@ public class TermoHelper {
         return Arrays.stream(megaListaPalavrasEncontradas.split("\n"))
                 .filter(v -> v.length() == qtdeCaracteres)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private InputStream getFileFromResourceAsStream(String fileName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Arquivo não encontrado! " + fileName);
+        } else {
+            return inputStream;
+        }
+
     }
 }
