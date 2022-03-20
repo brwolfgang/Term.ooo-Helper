@@ -9,15 +9,23 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class TermoHelper {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Formato de uso: TermoHelper.jar <palavra>. Cada letra desconhecida deve ser trocada por ponto como em r.dio");
+        }
+
+        String patternBusca = args[0].replaceAll("\\.", "\\D");
+
+        consultarListaPalavras(patternBusca);
+    }
+
+    private static void consultarListaPalavras(String patternBusca) {
         ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(5, "br-utf8.txt");
 
-        tratarInput(args);
-        
         System.out.println(String.format("Qtde palavras encontradas: %s", arrayPalavrasCarregadas.size()));
 
         ArrayList<String> palavrasFiltradas = arrayPalavrasCarregadas.stream()
-                .filter(v -> v.matches("pra\\D\\D"))
+                .filter(v -> v.matches(patternBusca))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         System.out.println("-----------------------------------");
@@ -25,12 +33,8 @@ public class TermoHelper {
         System.out.println("-----------------------------------");
 
         palavrasFiltradas.forEach(System.out::println);
-        
-        System.out.println(String.format("Quantidade de palavras filtradas: %s", palavrasFiltradas.size()));
-    }
 
-    private static void tratarInput(String[] args) throws Exception {
-        System.out.println(args.length);
+        System.out.println(String.format("Quantidade de palavras filtradas: %s", palavrasFiltradas.size()));
     }
 
     public ArrayList<String> carregarListaPalavras(int qtdeCaracteres, String arquivoDicionario) {
@@ -44,6 +48,8 @@ public class TermoHelper {
             while (reader.ready()) {
                 stringBuilder.append(reader.readLine()).append("\n");
             }
+            
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
