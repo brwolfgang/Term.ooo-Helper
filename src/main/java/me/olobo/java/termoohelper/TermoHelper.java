@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -46,8 +47,19 @@ public class TermoHelper implements Callable<Integer> {
 
         System.out.println(String.format("Qtde palavras carregadas do dicionário: %s", arrayPalavrasCarregadas.size()));
 
+        List<String> listaLetrasInexistentes = Arrays.stream(letrasInexistentes.split("")).map(String::toLowerCase).collect(Collectors.toList());
+
         ArrayList<String> palavrasFiltradas = arrayPalavrasCarregadas.stream()
                 .filter(v -> v.matches(patternBusca))
+                .filter(v -> {
+                    for (String letraInexistente : listaLetrasInexistentes) {
+                        if (v.contains(letraInexistente)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
                 .collect(Collectors.toCollection(ArrayList::new));
 
         System.out.println("-- Par\u00E2metros utilizados: --");
