@@ -46,7 +46,7 @@ public class TermoHelper implements Callable<Integer> {
     }
 
     private void consultarListaPalavras(String patternBusca) {
-        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(tamanhoPalavra, "br-utf8.txt");
+        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(tamanhoPalavra, "br-sem-acentos.txt");
 
         System.out.println(String.format("Qtde palavras carregadas do dicion\u00E1rio: %s", arrayPalavrasCarregadas.size()));
 
