@@ -1,6 +1,6 @@
 # Term.ooo Helper
  
-Um programa para facilitar a vida dos jogadores do jogo de palavras Termoo e semelhantes, disponível [aqui](https://term.ooo).
+Um programa para facilitar a vida dos jogadores do jogo de palavras Term.ooo e semelhantes, disponível [aqui](https://term.ooo).
 
 ## Download
 Consulte os releases [aqui](https://github.com/brwolfgang/Term.ooo-Helper/releases).
