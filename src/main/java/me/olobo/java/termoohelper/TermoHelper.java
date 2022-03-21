@@ -1,5 +1,9 @@
 package me.olobo.java.termoohelper;
 
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,26 +12,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public class TermoHelper {
+@Command(name = "Term.ooo Helper", mixinStandardHelpOptions = true, version = "0.2")
+public class TermoHelper implements Callable<Integer> {
+
+    @Option(names = "-l", required = true, description = "Letras com posi\u00E7\u00F5es conhecidas, colocando . (ponto) no lugar das desconhecidas. Exemplo: v.z.o")
+    String letras;
+
+    @Option(names = "-e", description = "Letras que sabidamente n\u00E3o existem na palavra, todas juntas sem espa\u00E7o.", defaultValue = "")
+    String letrasInexistentes;
+
+    @Option(names = "-t", description = "Tamanho da palavra a ser consultada, o padr\u00E3o \u00E9 5", defaultValue = "5")
+    Integer tamanhoPalavra;
+
     public static void main(String[] args) {
-        validarInput(args);
-
-        TermoHelper termoHelper = new TermoHelper();
-
-        String patternBusca = termoHelper.gerarPatternConsulta(args[0]);
-
-        termoHelper.consultarListaPalavras(patternBusca);
+        System.exit(new CommandLine(new TermoHelper()).execute(args));
     }
 
-    public static void validarInput(String[] args) {
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Formato de uso: TermoHelper.jar <palavra>. Cada letra desconhecida deve ser trocada por ponto como em r.dio");
-        }
-
-        if (args[0].length() != 5) {
-            throw new IllegalArgumentException("Formato de uso: TermoHelper.jar <palavra>. A palavra consultada deve conter 5 caracteres");
+    public void validarInput() {
+        if (letras.length() != tamanhoPalavra) {
+            throw new IllegalArgumentException(String.format("Formato de uso: TermoHelper.jar <letras>. A palavra consultada deve conter %d caracteres. Foi usada a palavra '%s' que cont\u00E9m %d caracteres", tamanhoPalavra, letras, letras.length()));
         }
     }
 
@@ -36,13 +42,21 @@ public class TermoHelper {
     }
 
     private void consultarListaPalavras(String patternBusca) {
-        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(5, "br-utf8.txt");
+        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(tamanhoPalavra, "br-utf8.txt");
 
         System.out.println(String.format("Qtde palavras carregadas do dicionário: %s", arrayPalavrasCarregadas.size()));
 
         ArrayList<String> palavrasFiltradas = arrayPalavrasCarregadas.stream()
                 .filter(v -> v.matches(patternBusca))
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        System.out.println("-- Par\u00E2metros utilizados: --");
+        System.out.println("-- Letras: " + letras);
+        System.out.println("-- Tamanho da palavra: " + tamanhoPalavra);
+
+        if (!letrasInexistentes.isEmpty()) {
+            System.out.println("-- Letras inexistentes: " + letrasInexistentes);
+        }
 
         System.out.println("-----------------------------------");
         System.out.println("-- Lista de palavras encontradas --");
@@ -86,5 +100,16 @@ public class TermoHelper {
         } else {
             return inputStream;
         }
+    }
+
+    @Override
+    public Integer call() {
+        validarInput();
+
+        String patternBusca = gerarPatternConsulta(letras);
+
+        consultarListaPalavras(patternBusca);
+
+        return 123;
     }
 }
