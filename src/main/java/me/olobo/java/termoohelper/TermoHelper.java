@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +11,16 @@ import java.util.stream.Collectors;
 
 public class TermoHelper {
     public static void main(String[] args) {
+        validarInput(args);
+
+        TermoHelper termoHelper = new TermoHelper();
+
+        String patternBusca = termoHelper.gerarPatternConsulta(args[0]);
+
+        termoHelper.consultarListaPalavras(patternBusca);
+    }
+
+    public static void validarInput(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("Formato de uso: TermoHelper.jar <palavra>. Cada letra desconhecida deve ser trocada por ponto como em r.dio");
         }
@@ -19,12 +28,6 @@ public class TermoHelper {
         if (args[0].length() != 5) {
             throw new IllegalArgumentException("Formato de uso: TermoHelper.jar <palavra>. A palavra consultada deve conter 5 caracteres");
         }
-
-        TermoHelper termoHelper = new TermoHelper();
-
-        String patternBusca = termoHelper.gerarPatternConsulta(args[0]);
-
-        termoHelper.consultarListaPalavras(patternBusca);
     }
 
     public String gerarPatternConsulta(String palavra) {

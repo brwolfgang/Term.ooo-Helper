@@ -23,4 +23,18 @@ public class TermoHelperTest {
 
         assertThat(patternConsulta, CoreMatchers.equalTo("v\\Dado"));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deveValidarInputVazio() {
+        String[] args = new String[] {};
+        
+        TermoHelper.validarInput(args);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deveValidarInputTamanhoIncorreto() {
+        String[] args = new String[] {"rapadura"};
+
+        TermoHelper.validarInput(args);
+    }
 }
