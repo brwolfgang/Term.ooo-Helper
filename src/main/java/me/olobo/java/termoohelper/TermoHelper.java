@@ -25,6 +25,9 @@ public class TermoHelper implements Callable<Integer> {
     @Option(names = "-e", description = "Letras que sabidamente n\u00E3o existem na palavra, todas juntas sem espa\u00E7o.", defaultValue = "")
     String letrasInexistentes;
 
+    @Option(names = "-a", description = "Letras que sabidamente existem na palavra, mas de posi\u00E7\u00E3o desconhecida. Todas juntas sem espa\u00E7o.", defaultValue = "")
+    String letrasExistentes;
+
     @Option(names = "-t", description = "Tamanho da palavra a ser consultada, o padr\u00E3o \u00E9 5", defaultValue = "5")
     Integer tamanhoPalavra;
 
@@ -45,13 +48,25 @@ public class TermoHelper implements Callable<Integer> {
     private void consultarListaPalavras(String patternBusca) {
         ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(tamanhoPalavra, "br-utf8.txt");
 
-        System.out.println(String.format("Qtde palavras carregadas do dicionário: %s", arrayPalavrasCarregadas.size()));
+        System.out.println(String.format("Qtde palavras carregadas do dicion\u00E1rio: %s", arrayPalavrasCarregadas.size()));
 
+        List<String> listaLetrasExistentes = Arrays.stream(letrasExistentes.split("")).map(String::toLowerCase).collect(Collectors.toList());
         List<String> listaLetrasInexistentes = Arrays.stream(letrasInexistentes.split("")).map(String::toLowerCase).collect(Collectors.toList());
 
         ArrayList<String> palavrasFiltradas = arrayPalavrasCarregadas.stream()
                 .filter(v -> v.matches(patternBusca))
                 .filter(v -> {
+                    // Mantém apenas palavras que contêm todas as letras conhecidas
+                    for (String letraExistente : listaLetrasExistentes) {
+                        if (!v.contains(letraExistente)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+                .filter(v -> {
+                    // Remove palavras que contém letras sabidamente inexistentes
                     for (String letraInexistente : listaLetrasInexistentes) {
                         if (v.contains(letraInexistente)) {
                             return false;
@@ -68,6 +83,9 @@ public class TermoHelper implements Callable<Integer> {
 
         if (!letrasInexistentes.isEmpty()) {
             System.out.println("-- Letras inexistentes: " + letrasInexistentes);
+        }
+        if (!letrasExistentes.isEmpty()) {
+            System.out.println("-- Letras existentes: " + letrasExistentes);
         }
 
         System.out.println("-----------------------------------");
