@@ -37,31 +37,22 @@ O parâmetro `-e` é usado para definir letras que sabidamente não existem na p
   
 Ao pressionar Enter será exibida uma lista de palavras que se encaixam no padrão passado usando `-l` e que *não* contêm as letras x, y ou z.
 
-### Usando um tamanho de palavra diferente
-Como a maioria dos jogos semelhantes ao Term.ooo usam palavras de 5 letras, este foi o padrão adotado nesta aplicação. Entretanto, é possível definir um tamanho de palavra específico usando o parâmetro `-t`. 
-
-- Jogo aleatório: V⬛NEZ🟨
-- Parâmetro: `-t 6`
-- Linha de comando completa: `java -jar TermoooHelper.jar -l V.NEZ. -t 6`
-
 ### Tudo junto e misturado
 Você pode combinar todos os parâmetros para obter uma lista de palavras super específica:
 
-`java -jar TermoooHelper-0.3.jar -l ..l.... -e poar -t 7 -a ulst`
+`java -jar TermoooHelper-0.3.jar -l ..l.... -e poar -a ulst`
 
 Significado do comando:
 - `-l ..l....`
   - A palavra a ser encontrada tem um l na terceira posição.
 - `-e poar`
   - A palavra a ser encontrada não possui as letras p, o, a ou r.
-- `-t`
-  - A palavra a ser encontrada tem 7 letras.
 - `-a ulst`
   - A palavra a ser encontrada deve ter as letrs u, l, s e t.
 
 Saída do programa com os parâmetros acima:
 ```
-java -jar TermoooHelper-0.3.jar -l ..l.... -e poar -t 7 -a ulst
+java -jar TermoooHelper-0.3.jar -l ..l.... -e poar -a ulst
 Qtde palavras carregadas do dicionário: 22226
 -- Parâmetros utilizados: --
 -- Letras: ..l....
