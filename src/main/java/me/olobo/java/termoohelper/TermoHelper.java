@@ -50,8 +50,8 @@ public class TermoHelper implements Callable<Integer> {
 
         System.out.println(String.format("Qtde palavras carregadas do dicion\u00E1rio: %s", arrayPalavrasCarregadas.size()));
 
-        List<String> listaLetrasExistentes = Arrays.stream(letrasExistentes.split("")).map(String::toLowerCase).collect(Collectors.toList());
-        List<String> listaLetrasInexistentes = Arrays.stream(letrasInexistentes.split("")).map(String::toLowerCase).collect(Collectors.toList());
+        List<String> listaLetrasExistentes = Arrays.stream(letrasExistentes.split("")).map(String::toLowerCase).filter(v -> !v.isEmpty()).collect(Collectors.toList());
+        List<String> listaLetrasInexistentes = Arrays.stream(letrasInexistentes.split("")).map(String::toLowerCase).filter(v -> !v.isEmpty()).collect(Collectors.toList());
 
         ArrayList<String> palavrasFiltradas = arrayPalavrasCarregadas.stream()
                 .filter(v -> v.matches(patternBusca))
