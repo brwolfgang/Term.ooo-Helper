@@ -57,7 +57,7 @@ public class TermoHelper implements Callable<Integer> {
                     return true;
                 })
                 .filter(v -> {
-                    // Remove palavras que contém letras sabidamente inexistentes
+                    // Remove palavras que contêm letras sabidamente inexistentes
                     for (String letraInexistente : listaLetrasInexistentes) {
                         if (v.contains(letraInexistente)) {
                             return false;
@@ -73,10 +73,10 @@ public class TermoHelper implements Callable<Integer> {
         System.out.println("-- Tamanho da palavra: " + letras.length());
 
         if (!letrasInexistentes.isEmpty()) {
-            System.out.println("-- Letras inexistentes: " + letrasInexistentes);
+            System.out.println("-- Letras inexistentes: " + String.join(", ", listaLetrasInexistentes));
         }
         if (!letrasExistentes.isEmpty()) {
-            System.out.println("-- Letras existentes: " + letrasExistentes);
+            System.out.println("-- Letras existentes: " + String.join(", ", listaLetrasExistentes));
         }
 
         System.out.println("-----------------------------------");
