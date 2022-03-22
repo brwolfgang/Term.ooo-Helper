@@ -28,17 +28,8 @@ public class TermoHelper implements Callable<Integer> {
     @Option(names = "-a", description = "Letras que sabidamente existem na palavra, mas de posi\u00E7\u00E3o desconhecida. Todas juntas sem espa\u00E7o.", defaultValue = "")
     String letrasExistentes;
 
-    @Option(names = "-t", description = "Tamanho da palavra a ser consultada, o padr\u00E3o \u00E9 5", defaultValue = "5")
-    Integer tamanhoPalavra;
-
     public static void main(String[] args) {
         System.exit(new CommandLine(new TermoHelper()).execute(args));
-    }
-
-    public void validarInput() {
-        if (letras.length() != tamanhoPalavra) {
-            throw new IllegalArgumentException(String.format("Formato de uso: TermoHelper.jar <letras>. A palavra consultada deve conter %d caracteres. Foi usada a palavra '%s' que cont\u00E9m %d caracteres", tamanhoPalavra, letras, letras.length()));
-        }
     }
 
     public String gerarPatternConsulta(String palavra) {
@@ -46,7 +37,7 @@ public class TermoHelper implements Callable<Integer> {
     }
 
     private void consultarListaPalavras(String patternBusca) {
-        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(tamanhoPalavra, "br-sem-acentos.txt");
+        ArrayList<String> arrayPalavrasCarregadas = new TermoHelper().carregarListaPalavras(letras.length(), "br-sem-acentos.txt");
 
         System.out.println(String.format("Qtde palavras carregadas do dicion\u00E1rio: %s", arrayPalavrasCarregadas.size()));
 
@@ -79,7 +70,7 @@ public class TermoHelper implements Callable<Integer> {
 
         System.out.println("-- Par\u00E2metros utilizados: --");
         System.out.println("-- Letras: " + letras);
-        System.out.println("-- Tamanho da palavra: " + tamanhoPalavra);
+        System.out.println("-- Tamanho da palavra: " + letras.length());
 
         if (!letrasInexistentes.isEmpty()) {
             System.out.println("-- Letras inexistentes: " + letrasInexistentes);
@@ -134,12 +125,10 @@ public class TermoHelper implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        validarInput();
-
         String patternBusca = gerarPatternConsulta(letras);
 
         consultarListaPalavras(patternBusca);
 
-        return 123;
+        return 0;
     }
 }
